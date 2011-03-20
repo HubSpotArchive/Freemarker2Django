@@ -2,36 +2,42 @@
 Tests for convert utilities.
 """
 
+import os
 import unittest
 
 import convert
 
-FREEMARKER_BASIC_HTML = """
-<html>
-  <div>
-    <p>
-      Hello, World!
-    </p>
-  </div>
-</html>
-"""
+RESOURCE_DIR = os.path.join(os.path.dirname(__file__), 'resources')
 
-EXPECTED_DJANGO_BASIC_HTML = """
-<html>
-  <div>
-    <p>
-      Hello, World!
-    </p>
-  </div>
-</html>
-"""
+FREEMARKER_BASIC_HTML_NAME = 'freemarker_basic_html.ftl'
+
+DJANGO_BASIC_HTML_NAME = 'django_basic_html.html'
+
+FREEMARKER_BASIC_VARIABLE_NAME = 'freemarker_basic_variable.ftl'
+
+DJANGO_BASIC_VARIABLE_NAME = 'django_basic_variable.html'
 
 class TestConvert(unittest.TestCase):
     
     def testBasicConvert(self):
         """ Tests conversion with no tokens are macros. """
-        output = convert.freemarker_to_django(FREEMARKER_BASIC_HTML)
-        self.assertEquals(EXPECTED_DJANGO_BASIC_HTML, output)
+        template = convert.get_template(RESOURCE_DIR, FREEMARKER_BASIC_HTML_NAME)
+        output = convert.freemarker_to_django(template)
+
+        f = open(os.path.join(RESOURCE_DIR, DJANGO_BASIC_HTML_NAME))
+        expected = f.read()
+        f.close()
+
+        self.assertEquals(expected, output)
+
+    def testConvertBasicVariable(self):
+        """ Tests conversion of variable to something that Django can understand. """
+        template = convert.get_template(RESOURCE_DIR, FREEMARKER_BASIC_VARIABLE_NAME)
+        output = convert.freemarker_to_django(template)
+        f = open(os.path.join(RESOURCE_DIR, DJANGO_BASIC_VARIABLE_NAME))
+        expected = f.read()
+        f.close()
+        self.assertEquals(expected, output)
         
 if __name__ == '__main__':
     unittest.main()
