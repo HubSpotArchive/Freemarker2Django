@@ -17,6 +17,10 @@ FREEMARKER_BASIC_VARIABLE_NAME = 'freemarker_basic_variable.ftl'
 
 DJANGO_BASIC_VARIABLE_NAME = 'django_basic_variable.html'
 
+FREEMARKER_BASIC_COMMENT_NAME = 'freemarker_basic_comment.ftl'
+
+DJANGO_BASIC_COMMENT_NAME = 'django_basic_comment.html'
+
 class TestConvert(unittest.TestCase):
     
     def testBasicConvert(self):
@@ -35,6 +39,15 @@ class TestConvert(unittest.TestCase):
         template = convert.get_template(os.path.join(RESOURCE_DIR, FREEMARKER_BASIC_VARIABLE_NAME))
         output = convert.freemarker_to_django(template)
         f = open(os.path.join(RESOURCE_DIR, DJANGO_BASIC_VARIABLE_NAME))
+        expected = f.read()
+        f.close()
+        self.assertEquals(expected, output)
+
+    def testConvertBasicVariable(self):
+        """ Tests conversion of variable to something that Django can understand. """
+        template = convert.get_template(os.path.join(RESOURCE_DIR, FREEMARKER_BASIC_COMMENT_NAME))
+        output = convert.freemarker_to_django(template)
+        f = open(os.path.join(RESOURCE_DIR, DJANGO_BASIC_COMMENT_NAME))
         expected = f.read()
         f.close()
         self.assertEquals(expected, output)

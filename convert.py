@@ -31,6 +31,19 @@ def freemarker_to_django(template):
                 django.template.base.VARIABLE_TAG_END,
                 )
             output = output.replace(child.toString(), django_variable)
+        elif child.__class__ == freemarker.core.Comment:
+            comment_block = "%s%s%s\n" % (
+                "%s comment %s" % (
+                    django.template.base.BLOCK_TAG_START,
+                    django.template.base.BLOCK_TAG_END,
+                    ),
+                child.text,
+                "%s endcomment %s" % (
+                    django.template.base.BLOCK_TAG_START,
+                    django.template.base.BLOCK_TAG_END,
+                    ),
+                )
+            output = output.replace(child.toString(), comment_block)
 
     return output
 
