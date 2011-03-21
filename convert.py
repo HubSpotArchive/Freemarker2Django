@@ -34,14 +34,14 @@ def freemarker_to_django(template):
 
     return output
 
-def get_template(dirname, filename):
+def get_template(filename):
     """ Ideally, would like to be able to get this from a string 
     instead of a being so tied to the directory structure, but need to find a way for the Java
     freemarker Java libs to work with just a string... yet."""
-    f = java.io.File(os.path.join(dirname, filename)).canonicalFile
+    f = java.io.File(filename).canonicalFile
     conf = freemarker.template.Configuration()
     conf.setDirectoryForTemplateLoading(f.parentFile)
-    template = conf.getTemplate(filename)
+    template = conf.getTemplate(os.path.basename(filename))
 
     return template
 
