@@ -1,0 +1,23 @@
+#!/usr/local/bin/jython
+"""
+Converts a Freemarker ftl to a Django html template.
+"""
+
+import sys
+
+import convert
+
+def main():
+    """
+    Main method to be invoked from the command line.
+    """
+    template_path = sys.argv[1]
+
+    template = convert.get_template(template_path)
+
+    output = convert.freemarker_to_django(template)
+
+    print (output)
+
+if __name__ == "__main__":
+    main()
