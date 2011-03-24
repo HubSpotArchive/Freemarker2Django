@@ -107,6 +107,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     '/home/ojrac/code/Freemarker2Django/example_project/templates',
+    '/Users/Owen/Documents/code/Freemarker2Django/example_project/templates',
 )
 
 INSTALLED_APPS = (
