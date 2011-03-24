@@ -1,3 +1,61 @@
 {% load button %}
 
-<p>The time is {% current_time "%Y-%m-%d %I:%M %p" %}.</p>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head id="Head">
+  
+  <script type="text/javascript">
+    //<![CDATA[
+      window.hubspot={splitTimes:{preHead:new Date()}};
+    //]]>
+  </script>
+    <meta id="MetaDescription" name="description" content="ojrac.hubspot.com" /><meta id="MetaKeywords" name="keywords" content="ojrac.hubspot.com" /><meta id="MetaCopyright" name="COPYRIGHT" content="Copyright (c) 2011 by ojrac.hubspot.com" /><meta id="MetaAuthor" name="AUTHOR" content="ojrac.hubspot.com" />
+<script type="text/javascript">
+//<![CDATA[
+window.hubspot=window.hubspot||{};(hubspot.splitTimes=hubspot.splitTimes||{}).preHeadBundles=new Date();
+//]]>
+</script>
+<link type="text/css" rel="stylesheet" href="//static.hubspotqa.com/bundles/final_page.css?v=RI_wNdKC3-bXTcZAu5lWfg" />
+<script type="text/javascript" src="//static.hubspotqa.com/bundles/final_head.js?v=qBezGia0xGY_fG12KPR2kQ"></script>
+<link type="text/css" rel="stylesheet" href="//static.hubspotqa.com/bundles/ui_toolkit.css?v=qBih91aST6LIRE_mC7raKQ" />
+<title>
+	Django Toolkit Sample
+</title></head>
+<body id="Body" class="hsdmz">
+<div class="hsdmz">
+  <div class="page">
+      <div class="app">
+          <div class="yolk">
+
+
+
+
+              <div>
+{% button %}
+Yo Dawg, I heard you like nested content
+{% endbutton %}
+              </div>
+
+              <br>
+
+              <div>
+{% button css_class='submit' %}
+This one's a submit
+{% endbutton %}
+              </div>
+
+
+              <br>
+
+              <div>
+{% button css_class='submit' next=True %}
+And this one has an arrow!
+{% endbutton %}
+              </div>
+
+            </div> <!-- yolk -->
+        </div> <!-- app -->
+    </div> <!-- page -->
+</div> <!-- hsdmz -->
+</body>
+</html>

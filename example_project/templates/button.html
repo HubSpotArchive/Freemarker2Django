@@ -1,0 +1,10 @@
+<a href="{{ href }}" {% if id %}id="{{ id }}" {% endif %}class="btn ui-button {{ type }}{% if css_class %} {{ css_class }} {% endif %}{% if not enabled %} disabled{% endif %}">
+<span class="corner left"></span>
+<span class="nested">
+{{ nested }}
+</span>
+{% if next %}<span class="arrow"></span>{% endif %}
+{% if next %}<span class="nested ie7_spacer"></span>{% endif %}
+<span class="corner right"></span>
+</a>
+
