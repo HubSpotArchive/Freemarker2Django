@@ -9,43 +9,115 @@ import java
 
 import django
 
+def wrap_matched_block(block_name, nested_content, block_args=''):
+    start = django.template.base.BLOCK_TAG_START
+    end = django.template.base.BLOCK_TAG_END
+
+    if block_args:
+        block_args = ' ' + block_args
+
+    return ("%(start)s %(block_name)s%(block_args)s %(end)s" +
+            "%(nested_content)s" +
+            "%(start)s end%(block_name)s %(end)s") % locals()
+
+def make_django_var(variable_name):
+    return "%s %s %s" % (
+        django.template.base.VARIABLE_TAG_START,
+        variable_name.strip(),
+        django.template.base.VARIABLE_TAG_END,
+        )
+
+BOOL_CONVERSIONS = [
+        (re.compile(r'(?P<var>[^ ?]+)\?(length gt 0|has_content)'), '%(var)s'),
+        (re.compile(r'!(?P<var>[^ ?]+)'), 'not %(var)s'),
+        ]
+def convert_boolean(boolean):
+    for pattern, fmt in BOOL_CONVERSIONS:
+        match = pattern.match(boolean)
+        if match:
+            return fmt % match.groupdict()
+
+    return boolean
+
+
+def convert_conditional(node):
+    name, rest = node.description.split(' ', 1)
+    condition = convert_boolean(rest)
+
+    nested = freemarker_nodes_to_django(node.children())
+    return wrap_matched_block('if', nested, condition)
+
+def convert_macro(node):
+    """This is a temporary version -- eventually, macros will be
+    consumed to be converted into new files
+    """
+    nested = freemarker_nodes_to_django(node.children())
+    return wrap_matched_block('macro', nested)
+
+RECURSIVE_NODE_CONVERTERS = {
+        freemarker.core.ConditionalBlock: convert_conditional,
+        freemarker.core.Macro: convert_macro,
+    }
+
+def convert_dollar_var(node):
+    matches = re.compile(r".*?\{(.*)\}").match(str(node))
+    variable_name = matches.group(1)
+    return make_django_var(variable_name)
+
+def convert_comment(node):
+    return wrap_matched_block('comment', node.text) + '\n'
+
+def convert_dir(node):
+    return '\n' + str(dir(node)) + '\n'
+
+def convert_body_instruction(node):
+    if str(node) == '<#nested>':
+        return make_django_var('nested')
+
+def convert_text(node):
+    if node.leaf:
+        return str(node)
+    else:
+        print '...', str(type(node)),  str(dir(node))
+        
+
+NODE_CONVERTERS = {
+        freemarker.core.DollarVariable: convert_dollar_var,
+        freemarker.core.Comment: convert_comment,
+        freemarker.core.TextBlock: convert_text,
+        freemarker.core.BodyInstruction: convert_body_instruction,
+        freemarker.core.ConditionalBlock: convert_conditional,
+    }
+
+def freemarker_node_to_django(node):
+    cls = node.__class__
+    if cls in RECURSIVE_NODE_CONVERTERS:
+        return RECURSIVE_NODE_CONVERTERS[cls](node)
+    elif cls in NODE_CONVERTERS:
+        output = NODE_CONVERTERS[cls](node)
+    elif node.description == 'root element':
+        output = ''
+    else:
+        output = str(node)
+        import pdb; pdb.set_trace()
+        print "--- %s: %s" % (cls, node.toString())
+
+    if not output:
+        output = '' # guard vs None
+
+    return output + freemarker_nodes_to_django(node.children())
+
+def freemarker_nodes_to_django(nodes):
+    if not nodes:
+        return ''
+
+    return ''.join([freemarker_node_to_django(node) for node in nodes])
+
 def freemarker_to_django(template):
     """
     Converts a freemarker template to a Django template.
     """
-    # N.B currently using replaces to swap out values...
-    # Ideally would like to do a builder style,
-    # but hacking around a template not having children if
-    # it is just vanilla text.
-    output = template.toString()
-
-    children = template.rootTreeNode.children()
-    for child in children:
-        if child.__class__ == freemarker.core.DollarVariable:
-            # TODO, should probably break out into a get variable name method
-            matches = re.compile(r".*?\{(.*)\}").match(child.toString())
-            variable_name = matches.group(1)
-            django_variable = "%s %s %s" % (
-                django.template.base.VARIABLE_TAG_START,
-                variable_name,
-                django.template.base.VARIABLE_TAG_END,
-                )
-            output = output.replace(child.toString(), django_variable)
-        elif child.__class__ == freemarker.core.Comment:
-            comment_block = "%s%s%s\n" % (
-                "%s comment %s" % (
-                    django.template.base.BLOCK_TAG_START,
-                    django.template.base.BLOCK_TAG_END,
-                    ),
-                child.text,
-                "%s endcomment %s" % (
-                    django.template.base.BLOCK_TAG_START,
-                    django.template.base.BLOCK_TAG_END,
-                    ),
-                )
-            output = output.replace(child.toString(), comment_block)
-
-    return output
+    return str(freemarker_node_to_django(template.rootTreeNode))
 
 def get_template(filename):
     """ Ideally, would like to be able to get this from a string 
