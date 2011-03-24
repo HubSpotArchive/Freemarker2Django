@@ -35,7 +35,7 @@ def matched_tag_compiler(params, defaults, name, node_class, parser, token):
         for bit in bits:
             match = kwarg_re.match(bit)
             if not match:
-                raise TemplateSyntaxError("Malformed arguments to url tag")
+                raise template.TemplateSyntaxError("Malformed arguments to url tag")
             key, value = match.groups()
             if key:
                 kwargs[key] = value
@@ -54,7 +54,7 @@ def matched_inclusion_tag(library, file_name, context_class=Context, takes_conte
                 if params[0] == 'context':
                     params = params[1:]
                 else:
-                    raise TemplateSyntaxError("Any tag function decorated with takes_context=True must have a first argument of 'context'")
+                    raise template.TemplateSyntaxError("Any tag function decorated with takes_context=True must have a first argument of 'context'")
 
             class InclusionNode(template.Node):
                 def __init__(self, args, kwargs, nested_nodes):
