@@ -70,7 +70,7 @@ def matched_inclusion_tag(library, file_name, context_class=Context, takes_conte
                     context['None'] = None
 
                     resolved_args = [var.resolve(context) for var in self.args]
-                    resolved_kwargs = dict([(k, v.resolve(context))
+                    resolved_kwargs = dict([(str(k), v.resolve(context))
                             for k, v in self.kwargs.items()])
                     context.pop()
 
