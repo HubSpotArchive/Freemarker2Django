@@ -37,6 +37,8 @@ BOOL_CONVERSIONS = [
         ]
 def convert_boolean(boolean):
     """Convert a FTL boolean string to a Django-style one"""
+    boolean = boolean.replace("true", "True").replace("false", "False")
+
     for pattern, fmt in BOOL_CONVERSIONS:
         match = pattern.match(boolean)
         if match:

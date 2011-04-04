@@ -12,6 +12,7 @@ TESTS = [
     # (file, [(macro_name, args, template) ...])
     ('freemarker_elements.ftl', [
         ('bold', '', '<b>{{ nested }}</b>'),
+        ('condition', '', '{% if True %}TRUTH{% endif %}'),
         ]),
         ]
 

@@ -25,5 +25,6 @@ def read_file(filename):
 class BaseTest(TestCase):
     def assertEqualsStr(self, expected, actual):
         """Some Windows machines just like to mess things up for everyone"""
-        self.assertEquals(expected.replace('\r', '').strip(),
-                          actual.replace('\r', '').strip())
+        self.assertEquals(
+                str(expected.replace('\r', '').strip()),
+                str(actual.replace('\r', '').strip()))
