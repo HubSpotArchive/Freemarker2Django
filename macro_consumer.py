@@ -27,7 +27,7 @@ class MacroConsumer(object):
     consumer = MacroConsumer(template)
     for macro_name, macro in consumer.macros.items():
         args, template = macro
-        print "Macro %(macro_name)s takes arguments %(args)s:"
+        print "Macro %(macro_name)s takes arguments %(args)s:" % locals()
         print template
     """
 
@@ -40,8 +40,11 @@ class MacroConsumer(object):
             # so we have to hack around that fact
             name, args = ARGS_RE.match(str(macro)).groups()
             self.macros[name] = (
-                    args.strip(),
+                    self.convert_args(args.strip()),
                     convert.freemarker_nodes_to_django(macro.children()))
+
+    def convert_args(self, args):
+        return args.replace('true', 'True').replace('false', 'False')
         
 def get_macros_and_comments(root):
     macros = []

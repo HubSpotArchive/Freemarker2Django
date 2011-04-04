@@ -19,6 +19,11 @@ TESTS = [
         ('length', '', '{% if str %}y{% endif %}'),
         ('has_content', '', '{% if str %}y{% endif %}'),
         ]),
+    ('freemarker_arguments.ftl', [
+        ('basic', 'a b', 'x'),
+        ('defaults', 'a=1 b=2', 'x'),
+        ('booldefault', 'x=True y=False', 'x'),
+        ]),
         ]
 
 
