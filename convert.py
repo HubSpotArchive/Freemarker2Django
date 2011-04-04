@@ -103,9 +103,10 @@ RECURSIVE_NODE_CONVERTERS = {
         freemarker.core.UnifiedCall: convert_macro_call,
     }
 
+DOLLAR_VAR_RE = re.compile(r".*?\{(.*)\}")
 def convert_dollar_var(node):
     """Convert a FTL variable node"""
-    matches = re.compile(r".*?\{(.*)\}").match(str(node))
+    matches = DOLLAR_VAR_RE.match(str(node))
     variable_name = matches.group(1)
     return make_django_var(variable_name)
 
@@ -113,16 +114,14 @@ def convert_comment(node):
     """Convert an FTL comment node"""
     return wrap_nested_content('comment', node.text) + '\n'
 
-def convert_dir(node):
-    """Debug-only"""
-    return '\n' + str(dir(node)) + '\n'
-
+NESTED_RE = re.compile(r'<#nested \s* /? >',
+        re.VERBOSE | re.IGNORECASE)
 def convert_body_instruction(node):
     """Converts a BodyInstruction... whatever that means!"""
-    if str(node) == '<#nested>':
+    if NESTED_RE.match(str(node)):
         return make_django_var('nested')
     else:
-        return convert_dbg(node)
+        import pdb; pdb.set_trace()
 
 def convert_text(node):
     """Convert a text node"""
