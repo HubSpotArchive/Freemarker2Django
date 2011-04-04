@@ -14,6 +14,11 @@ TESTS = [
         ('bold', '', '<b>{{ nested }}</b>'),
         ('condition', '', '{% if True %}TRUTH{% endif %}'),
         ]),
+    ('freemarker_boolean_translations.ftl', [
+        ('not', '', '{% if not True %}y{% endif %}'),
+        ('length', '', '{% if str %}y{% endif %}'),
+        ('has_content', '', '{% if str %}y{% endif %}'),
+        ]),
         ]
 
 

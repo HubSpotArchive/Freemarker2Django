@@ -1,4 +1,15 @@
 <#--
-This test file is full of basic elements we'll need to be able to convert.
-
+This test file is full of boolean logic that needs to be Djangofied
 -->
+
+<#macro not>
+<#if !true>y</#if>
+</#macro>
+
+<#macro length>
+<#if str?length gt 0>y</#if>
+</#macro>
+
+<#macro has_content>
+<#if str?has_content>y</#if>
+</#macro>
