@@ -13,8 +13,14 @@ ARGS_RE = re.compile( r"""
     <(?: (?: (?:\#macro|\#function) \s+) | @ )
         (?P<name>[^/\s>]+)
         (?P<args>
-            (?:\s+ [^/\s>]+ (?:\s* = \s* [^/\s>]+)?)*) \s* /? >
-    """,
+            (?:\s+ [^/\s>]+ (?:
+                \s* = \s* (?:
+                    (?: [^/\s>"']+ ) | (?: " [^"]* " ) | (?: ' [^']* ' )
+
+                )
+            )?)*
+        ) \s* /? >
+        """,
     re.VERBOSE | re.IGNORECASE)
 
 def make_block(block_name, block_args = ''):

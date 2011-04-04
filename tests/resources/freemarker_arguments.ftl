@@ -14,3 +14,6 @@ x
 x
 </#macro>
 
+<#macro slashes enctype="application/x-www-form-urlencoded">
+x
+</#macro>

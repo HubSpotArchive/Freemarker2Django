@@ -27,6 +27,7 @@ TESTS = [
         ('basic', 'a b', 'x'),
         ('defaults', 'a=1 b=2', 'x'),
         ('booldefault', 'x=True y=False', 'x'),
+        ('slashes', 'enctype="application/x-www-form-urlencoded"', 'x'),
         ]),
         ]
 
