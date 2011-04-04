@@ -10,13 +10,6 @@ import django
 
 import convert
 
-ARGS_RE = re.compile( r"""
-    <\#macro \s+ (?P<name>[^\s>]+)
-        (?P<args>
-            (?:\s+ [^\s>]+ (?:\s* = \s* [^\s>]+)?)*) \s* >
-    """,
-    re.VERBOSE | re.IGNORECASE)
-
 class MacroConsumer(object):
     """
     Consumes a Freemarker template with macros, and breaks it into three
@@ -38,7 +31,7 @@ class MacroConsumer(object):
         for macro in macro_nodes:
             # macro.argumentNames works fine, but macro.args is private,
             # so we have to hack around that fact
-            name, args = ARGS_RE.match(str(macro)).groups()
+            name, args = convert.ARGS_RE.match(str(macro)).groups()
             self.macros[name] = (
                     self.convert_args(args.strip()),
                     convert.freemarker_nodes_to_django(macro.children()))

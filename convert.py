@@ -9,17 +9,34 @@ import java
 
 import django
 
-def wrap_nested_content(block_name, nested_content, block_args=''):
-    """Wrap a string nested_content in a matched block"""
-    start = django.template.base.BLOCK_TAG_START
-    end = django.template.base.BLOCK_TAG_END
+ARGS_RE = re.compile( r"""
+    <(?: (?: (?:\#macro|\#function) \s+) | @ )
+        (?P<name>[^/\s>]+)
+        (?P<args>
+            (?:\s+ [^/\s>]+ (?:\s* = \s* [^/\s>]+)?)*) \s* /? >
+    """,
+    re.VERBOSE | re.IGNORECASE)
 
+def make_block(block_name, block_args = ''):
+    """Make a django block, optionally with arguments"""
     if block_args:
         block_args = ' ' + block_args
 
-    return ("%(start)s %(block_name)s%(block_args)s %(end)s" +
-            "%(nested_content)s" +
-            "%(start)s end%(block_name)s %(end)s") % locals()
+    return ' '.join((
+        django.template.base.BLOCK_TAG_START,
+        block_name + block_args,
+        django.template.base.BLOCK_TAG_END))
+
+
+def wrap_nested_content(block_name, nested_content, block_args=''):
+    """Wrap a string nested_content in a matched block"""
+    start = make_block('%s%s' % (block_name, block_args))
+    end = make_block('end%s' % block_name)
+
+    return ''.join((
+        make_block(block_name, block_args),
+        nested_content,
+        make_block('end' + block_name)))
 
 def make_django_var(variable_name):
     """Returns a Django variable tag"""
@@ -62,10 +79,28 @@ def convert_macro(node):
     nested = freemarker_nodes_to_django(node.children())
     return wrap_nested_content('macro', nested)
 
+def convert_macro_call(node):
+    """Convert a macro-call directive"""
+    _, name = node.description.split(' ', 1)
+
+    match = ARGS_RE.match(str(node))
+    if match:
+        _, args = match.groups()
+        args = args.strip()
+    else:
+        args = ''
+
+    if node.childCount:
+        nested = freemarker_nodes_to_django(node.children())
+        return wrap_nested_content(name, nested, args)
+
+    return make_block(name, args)
+        
 """These converters consume all their child nodes"""
 RECURSIVE_NODE_CONVERTERS = {
         freemarker.core.ConditionalBlock: convert_conditional,
         freemarker.core.Macro: convert_macro,
+        freemarker.core.UnifiedCall: convert_macro_call,
     }
 
 def convert_dollar_var(node):
@@ -95,7 +130,7 @@ def convert_text(node):
         return str(node)
     else:
         print '...', str(type(node)),  str(dir(node))
-        
+
 
 """These converters don't consume child nodes"""
 NODE_CONVERTERS = {

@@ -13,6 +13,9 @@ TESTS = [
     ('freemarker_elements.ftl', [
         ('bold', '', '<b>{{ nested }}</b>'),
         ('condition', '', '{% if True %}TRUTH{% endif %}'),
+        ('recursion', '', '{% recursion %}'),
+        ('nesting', '', '{% nesting %}woa{% endnesting %}'),
+        ('withArgs', 'x', '{% withArgs 1 %}'),
         ]),
     ('freemarker_boolean_translations.ftl', [
         ('not', '', '{% if not True %}y{% endif %}'),
