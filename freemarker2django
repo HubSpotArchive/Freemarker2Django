@@ -6,6 +6,7 @@ Converts a Freemarker ftl to a Django html template.
 import sys
 
 import convert
+import macro_consumer
 
 def main():
     """
@@ -14,10 +15,12 @@ def main():
     template_path = sys.argv[1]
 
     template = convert.get_template(template_path)
-
-    output = convert.freemarker_to_django(template)
-
-    print (output)
+    consumer = macro_consumer.MacroConsumer(template)
+    for macro_name, macro in consumer.macros.items():
+        args, template = macro
+        print "Macro %(macro_name)s takes arguments %(args)s:" % locals()
+        print template
+    
 
 if __name__ == "__main__":
     main()
