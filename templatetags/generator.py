@@ -40,8 +40,6 @@ class Generator(object):
                 value = 'False'
             elif _value == True:
                 value = 'True'
-            elif _value == '':
-                value = "''"
             else:
                 value = "'%s'" % _value
 
