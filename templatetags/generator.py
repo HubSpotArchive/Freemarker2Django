@@ -19,7 +19,7 @@ MAP_INDENT = 8
 
 class Generator(object):
     """
-    Wrapper object for info abot the template tag that we are generating.
+    Wrapper object for info about the template tag that we are generating.
     """
     
     def __init__(self, macro_name, parameters_map):
