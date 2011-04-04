@@ -21,6 +21,7 @@ TESTS = [
     ('freemarker_boolean_translations.ftl', [
         ('not', '', '{% if not True %}y{% endif %}'),
         ('length', '', '{% if str %}y{% endif %}'),
+        ('length2', '', '{% if str %}y{% endif %}'),
         ('has_content', '', '{% if str %}y{% endif %}'),
         ]),
     ('freemarker_arguments.ftl', [

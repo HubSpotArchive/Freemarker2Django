@@ -55,7 +55,7 @@ def make_django_var(variable_name):
 # Basic rules for converting some simple boolean expressions
 # Not likely to work long-term
 BOOL_CONVERSIONS = [
-        (re.compile(r'(?P<var>[^ ?]+)\?(length gt 0|has_content)'), '%(var)s'),
+        (re.compile(r'(?P<var>[^ ?]+)\?((trim\?)?length gt 0|has_content)'), '%(var)s'),
         (re.compile(r'!(?P<var>[^ ?]+)'), 'not %(var)s'),
         ]
 def convert_boolean(boolean):
