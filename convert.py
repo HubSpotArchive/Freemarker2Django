@@ -88,6 +88,8 @@ def convert_macro(node):
     nested = freemarker_nodes_to_django(node.children())
     return wrap_nested_content('macro', nested)
 
+VARIABLE_RE = re.compile(r'\${(?P<var>[^}]+)}')
+VARIABLE_CLEANUP_RE = re.compile(r'(""\|add:)|(\|add:"")')
 def convert_macro_call(node):
     """Convert a macro-call directive"""
     _, name = node.description.split(' ', 1)
@@ -96,6 +98,10 @@ def convert_macro_call(node):
     if match:
         _, args = match.groups()
         args = args.strip()
+
+        # not the most elegant thing I've done
+        args = VARIABLE_RE.sub(r'"|add:\g<var>|add:"', args)
+        args = VARIABLE_CLEANUP_RE.sub('', args)
     else:
         args = ''
 

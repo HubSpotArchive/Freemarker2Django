@@ -17,6 +17,8 @@ TESTS = [
         ('recursion', '', '{% recursion %}'),
         ('nesting', '', '{% nesting %}woa{% endnesting %}'),
         ('withArgs', 'x', '{% withArgs 1 %}'),
+        ('varArgs', 'x', '{% withArgs x %}'),
+        ('manyStrings', 'x y', '{% withArgs x|add:" "|add:y %}'),
         ]),
     ('freemarker_boolean_translations.ftl', [
         ('not', '', '{% if not True %}y{% endif %}'),
