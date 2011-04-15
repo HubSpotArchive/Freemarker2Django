@@ -56,12 +56,14 @@ def make_django_var(variable_name):
 # Not likely to work long-term
 BOOL_CONVERSIONS = [
         (re.compile(r'(?P<var>[^ ?]+)\?((trim\?)?length gt 0|has_content)'), '%(var)s'),
-        (re.compile(r'(?P<var>[^ ?]+)[ ]*=[ ]*True'), '%(var)s'),
+        (re.compile(r'(?P<var>[^= ?]+)[ ]*==?[ ]*True'), '%(var)s'),
         (re.compile(r'!(?P<var>[^ ?]+)'), 'not %(var)s'),
         ]
 def convert_boolean(boolean):
     """Convert a FTL boolean string to a Django-style one"""
-    boolean = boolean.replace("true", "True").replace("false", "False")
+    boolean = boolean.replace("true", "True") \
+            .replace("false", "False") \
+            .replace("=", "==")
 
     for pattern, fmt in BOOL_CONVERSIONS:
         match = pattern.match(boolean)

@@ -9,6 +9,9 @@ This test file is full of boolean logic that needs to be Djangofied
 <#macro truth>
 <#if bool = true>y</#if>
 </#macro>
+<#macro truth2>
+<#if bool=true>y</#if>
+</#macro>
 
 <#macro length>
 <#if str?length gt 0>y</#if>
@@ -20,4 +23,8 @@ This test file is full of boolean logic that needs to be Djangofied
 
 <#macro has_content>
 <#if str?has_content>y</#if>
+</#macro>
+
+<#macro equals>
+<#if str = "123">y</#if>
 </#macro>

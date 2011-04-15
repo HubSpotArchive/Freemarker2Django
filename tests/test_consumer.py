@@ -23,7 +23,9 @@ TESTS = [
         ('length', '', '{% if str %}y{% endif %}'),
         ('length2', '', '{% if str %}y{% endif %}'),
         ('truth', '', '{% if bool %}y{% endif %}'),
+        ('truth2', '', '{% if bool %}y{% endif %}'),
         ('has_content', '', '{% if str %}y{% endif %}'),
+        ('equals', '', '{% if str == "123" %}y{% endif %}'),
         ]),
     ('freemarker_arguments.ftl', [
         ('basic', 'a b', 'x'),
