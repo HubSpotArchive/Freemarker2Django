@@ -1,0 +1,9 @@
+Installation
+=============
+
+ - Install Jython
+    http://www.jython.org/downloads.html
+ - Install Django
+    sudo pip-python install django
+ - Copy Django installation to Jython:
+    sudo cp /usr/lib/python2.7/site-packages/django/ /usr/share/jython2.5.2/Lib -r

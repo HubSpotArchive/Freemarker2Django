@@ -5,7 +5,7 @@ import os
 import re
 
 import freemarker
-import java
+import java.io
 
 import django
 
