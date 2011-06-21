@@ -1,4 +1,4 @@
-#!/usr/local/bin/jython
+#!/usr/bin/jython -Dpython.path=./jars/freemarker.jar
 """
 Converts a Freemarker ftl to a Django html template.
 """
